@@ -2,7 +2,7 @@
 
 const AWS = require('aws-sdk');
 const sharp = require('sharp');
-const { basename, extname } = require('path')
+const { basename, extname } = require('path');
 
 const S3 = new AWS.S3();
 
@@ -19,14 +19,14 @@ module.exports.handle = async ({ Records: records }, context) => {
       const optimized = await sharp(image.Body)
         .resize(1280, 720, { fit: 'inside', withoutEnlargement: true})
         .toFormat('jpeg', { progressive: true, quality: 50 })
-        .toBuffer()
+        .toBuffer();
 
       await S3.putObject({
         Body: optimized,
         Bucket: process.env.bucket,
         ContentType: 'image/jpeg',
         Key: `compressed/${basename(key, extname(key))}.jpg`
-      }).promisse()
+      }).promisse();
     }));
 
     return {
